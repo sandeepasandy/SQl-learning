@@ -1,0 +1,68 @@
+For changing the table name
+ALTER TABLE OLD-TABLE-NAME TO NEW-TABLE-NAME
+
+DML(Data manipulation language)
+-------------------------------
+insert 
+approach
+syntax:
+-------
+INSERT INTO Table-name(column-name1,column-name-2,.......column-n)
+values
+(value1,value-2,......value-n);
+ex:
+---
+INSERT INTO EMPLOYEES
+(EMPID,FIRSTNAME,LASTNAME,AGE,DOJ,ADDRESS,DEPT)
+VALUES
+('E0001','SANDEEPA','SANDY',21,'29-08-26','VIZAG','TRAINEE'),
+
+INSERT INTO EMPLOYEES
+(EMPID,FIRSTNAME,LASTNAME,AGE,DOJ,ADDRESS,DEPT)
+VALUES
+('E0002','PRUDHVI','RAJ',24,'30-08-26','VIZAG','TRAINEE'),
+('E0003','RAM','RAJ',23,'26-08-26','VIZAG','SALES'),
+('E0004','SHALINI','BADIDHA',20,'04-08-26','VIZAG','ADMIN');
+EASY WAY IN WORKBENCH
+
+UPDATE 
+------
+SYNTAX
+------
+update table-name set column-name=value where condition
+
+DELETE
+------
+SYNTAX
+------
+DELETE FROM table-name where condition
+
+TRUNCATE
+-------
+SYNTAX
+------
+TRUNCATE TABLE TABLE--NAME;
+
+DROP VS DELETE VS TRUNCATE
+DELETE: DELETE BASED ON SOME CONDITION DELETE ALL THE RECORDS
+DROP : IT DROPS THE ENTIRE TABLE AND STRUCTURE
+TRUNCATE : TO DELETE ALL RECORDS PRESENT IN THE TABLE
+
+DCL 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
