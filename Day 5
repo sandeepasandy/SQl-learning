@@ -1,0 +1,50 @@
+ 🚀 Day 5 | MySQL Learning Journey 🗄️💻
+
+Continuing my journey from **Python to SQL**, today I focused on strengthening my practical knowledge of **MySQL** through hands-on practice.
+
+📚 **What I learned and practiced today:**
+
+🔹 **Working with Tables**
+
+* `SHOW TABLES`
+* `DESC`
+* `SELECT`
+* `CREATE TABLE`
+* `DROP TABLE`
+
+🔹 **Constraints & Auto Increment**
+
+* `PRIMARY KEY`
+* `AUTO_INCREMENT`
+
+🔹 **Data Manipulation**
+
+* `INSERT`
+* `UPDATE`
+* `DELETE`
+
+🔹 **Backup Tables**
+
+* Created backup tables using `CREATE TABLE ... AS SELECT`
+* Practiced creating an empty backup table using `WHERE 1=0`
+
+🔹 **Computed Columns**
+
+* Created a `TOTALAMOUNT` column based on **PRICE × QUANTITY**
+* Practiced working with calculated values in a table
+
+🔹 **DCL – Data Control Language**
+
+* `GRANT`
+* `REVOKE`
+* `SHOW GRANTS`
+
+💡 **Today's learning reminded me that SQL is not just about writing queries — understanding how data is structured, controlled, modified, and stored is equally important.**
+
+I also faced a few errors during practice and learned by identifying and correcting them. Every mistake is helping me understand SQL better. 💪
+
+🐍 **Python → SQL → MySQL → DBMS**
+
+One step at a time, building my skills and becoming more confident with databases! 🚀
+
+#Day5 #SQL #MySQL #DBMS #Database #SQLLearning #Python #CodingJourney #LearningJourney #100DaysOfCode #Programming #Developer
