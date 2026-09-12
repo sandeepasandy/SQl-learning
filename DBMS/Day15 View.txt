@@ -1,0 +1,225 @@
+--What is view?
+View is a virtual table in MySQL.but from the result of a stored select statement.It looks
+and behaves like a regular table when you query it.You can select from it,filter it,and join it.
+but it doesn't store any data of its own,every time a view is queried,MySQL runs its underlying selct statement
+against the real tables and returns the result
+
+--Why do we need Views?
+Simplify complex queries :Hide multi-table joins,subqueries and calculation behind a single,simple table like name.
+reuse query logic:write a complex select once and reuse it anywhere,reports applications,dashboards without copy
+pasting SQL
+Data Security:Expose only specific columns or rows to certain users,without granting them access to full base table
+Different perspectives of the same data:Different departments can have their own tailered views of the same underlying tables
+Logic and independence:If the underlying table structure changes slightly.you can often adjust just view 
+defintion and keep all dependent queries working changed
+Simplifying reporting:Pre-packing aggregations(total,average,counts)into a view so business users can query them without 
+knowing SQL
+
+--Advantages
+Security:Restrict access to sensitive columns (eg:salary)or sensitive rows(only a users own department).
+Simplicity:End users and applications interact with simple named virtual table instead of complex SQL
+Reusability:one view definition can be reused across many reports,applications
+Consistency:Bussiness logic(calculation,filter)lives in one place,so results are always consistent.
+Maintainablity:A bussiness rule change only need to be made once.inside the view
+Custom data Presentation:rename or reformat columns and computed columns without touching the base table
+No extra storage cost:A standard view stores no data-->only its query definition
+
+--Creating views
+--syntax:
+create view view_name as 
+select columns
+from tables
+where conditions;
+
+--Altering views:
+--syntax:
+alter views view_name as
+select new_columns
+from new_tables
+where new_conditions;
+
+--dropping views:
+--syntax:
+drop view view_name;
+
+--CREATING VIEW:
+
+CREATE VIEW VW_EMPLOYEE_DEPARTMENT AS
+SELECT E.EMP_ID,E.EMP_NAME,E.DESIGNATION,D.DEPT_NAME,D.LOCATION
+FROM EMPLOYEES E
+JOIN DEPARTMENTS D
+ON E.DEPT_ID=D.DEPT_ID;
+
+SELECT*FROM VW_EMPLOYEE_DEPARTMENT;
+
+
+mysql> CREATE VIEW VW_DEPARTMENT_SALARY_SUMMARY AS
+    -> SELECT D.DEPT_NAME,
+    -> COUNT(E.EMP_ID)AS TOTAL_EMPLOYEE,
+    -> SUM(E.SALARY)AS TOTAL_SALARY,
+    -> AVG(E.SALARY)AS AVERAGE_SALARY
+    -> FROM EMPLOYEES E
+    -> JOIN DEPARTMENTS D ON E.DEPT_ID=D.DEPT_ID
+    -> GROUP BY D.DEPT_NAME;
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> SELECT * FROM VW_DEPARTMENT_SALARY_SUMMARY;
++-----------+----------------+--------------+----------------+
+| DEPT_NAME | TOTAL_EMPLOYEE | TOTAL_SALARY | AVERAGE_SALARY |
++-----------+----------------+--------------+----------------+
+| IT        |              2 |    120000.00 |   60000.000000 |
+| HR        |              2 |     98000.00 |   49000.000000 |
+| Finance   |              1 |     48000.00 |   48000.000000 |
+| Sales     |              1 |     52000.00 |   52000.000000 |
++-----------+----------------+--------------+----------------+
+
+mysql> CREATE VIEW VW_IT_EMPLOYEES AS
+    -> SELECT EMP_ID,EMP_NAME,DESIGNATION,DEPT_ID,SALARY
+    -> FROM EMPLOYEES
+    -> WHERE DEPT_ID=1
+    -> WITH CHECK OPTION;
+
+mysql> INSERT INTO VW_IT_EMPLOYEES(EMP_NAME,DEPT_ID,DESIGNATION,SALARY)
+    -> VALUES('VIJAY',1,'DEVOPS ENGINEER',58000);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> SELECT *FROM VW_IT_EMPLOYEES;
++--------+----------+-------------------+---------+----------+
+| EMP_ID | EMP_NAME | DESIGNATION       | DEPT_ID | SALARY   |
++--------+----------+-------------------+---------+----------+
+|      1 | Rahul    | Software Engineer |       1 | 55000.00 |
+|      4 | Priya    | Team Lead         |       1 | 65000.00 |
+|      7 | VIJAY    | DEVOPS ENGINEER   |       1 | 58000.00 |
++--------+----------+-------------------+---------+----------+
+
+FOR GETTING EMPLOYEE ANNUAL SALARY
+mysql> CREATE VIEW VW_EMPLOYEE_ANNUAL_SALARY AS
+    -> SELECT EMP_NAME,SALARY AS MONTHLY_SALARY,SALARY*12 AS ANNUAL_SALARY FROM EMPLOYEES;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> SELECT*FROM VW_EMPLOYEE_ANNUAL_SALARY;
++----------+----------------+---------------+
+| EMP_NAME | MONTHLY_SALARY | ANNUAL_SALARY |
++----------+----------------+---------------+
+| Rahul    |       55000.00 |     660000.00 |
+| Anita    |       38000.00 |     456000.00 |
+| Suresh   |       52000.00 |     624000.00 |
+| Priya    |       65000.00 |     780000.00 |
+| Kiran    |       48000.00 |     576000.00 |
+| Deepika  |       60000.00 |     720000.00 |
+| VIJAY    |       58000.00 |     696000.00 |
++----------+----------------+---------------+
+
+CREATING A VIEW BASED ON ANOTHER VIEW(MULTIPLE VIEW)
+mysql> CREATE VIEW VW_HIGH_PAYING_DEPARTMENT AS
+    -> SELECT DEPT_NAME,AVERAGE_SALARY
+    -> FROM VW_DEPARTMENT_SALARY_SUMMARY
+    -> WHERE AVERAGE_SALARY>50000;
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> SELECT * FROM VW_HIGH_PAYING_DEPARTMENT;
++-----------+----------------+
+| DEPT_NAME | AVERAGE_SALARY |
++-----------+----------------+
+| IT        |   59333.333333 |
+| Sales     |   52000.000000 |
++-----------+----------------+
+
+UPDATING VIEW
+-------------
+mysql> UPDATE VW_IT_EMPLOYEES SET SALARY=60000 WHERE EMP_NAME='VIJAY';
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM VW_IT_EMPLOYEES;
++--------+----------+-------------------+---------+----------+
+| EMP_ID | EMP_NAME | DESIGNATION       | DEPT_ID | SALARY   |
++--------+----------+-------------------+---------+----------+
+|      1 | Rahul    | Software Engineer |       1 | 55000.00 |
+|      4 | Priya    | Team Lead         |       1 | 65000.00 |
+|      7 | VIJAY    | DEVOPS ENGINEER   |       1 | 60000.00 |
++--------+----------+-------------------+---------+----------+
+3 rows in set (0.01 sec)
+
+mysql> SELECT*FROM EMPLOYEES;
++--------+----------+---------+-------------------+----------+------------+
+| emp_id | emp_name | dept_id | designation       | salary   | join_date  |
++--------+----------+---------+-------------------+----------+------------+
+|      1 | Rahul    |       1 | Software Engineer | 55000.00 | 2021-06-15 |
+|      2 | Anita    |       2 | HR Executive      | 38000.00 | 2020-03-21 |
+|      3 | Suresh   |       4 | Sales Manager     | 52000.00 | 2019-08-10 |
+|      4 | Priya    |       1 | Team Lead         | 65000.00 | 2022-01-05 |
+|      5 | Kiran    |       3 | Finance Analyst   | 48000.00 | 2018-12-11 |
+|      6 | Deepika  |       2 | HR Manager        | 60000.00 | 2019-10-19 |
+|      7 | VIJAY    |       1 | DEVOPS ENGINEER   | 60000.00 | NULL       |
++--------+----------+---------+-------------------+----------+------------+
+
+ALTER VIEW
+----------
+mysql> ALTER VIEW VW_EMPLOYEE_DEPARTMENT AS
+    -> SELECT E.EMP_ID,E.EMP_NAME,D.DEPT_NAME
+    -> FROM EMPLOYEES E
+    -> JOIN DEPARTMENTS D ON E.DEPT_ID=D.DEPT_ID;
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> SELECT*FROM VW_EMPLOYEE_DEPARTMENT;
++--------+----------+-----------+
+| EMP_ID | EMP_NAME | DEPT_NAME |
++--------+----------+-----------+
+|      1 | Rahul    | IT        |
+|      4 | Priya    | IT        |
+|      7 | VIJAY    | IT        |
+|      2 | Anita    | HR        |
+|      6 | Deepika  | HR        |
+|      5 | Kiran    | Finance   |
+|      3 | Suresh   | Sales     |
++--------+----------+-----------+
+
+DROP VIEW
+---------
+
+mysql> DROP VIEW VW_EMPLOYEE_DEPARTMENT;
+Query OK, 0 rows affected (0.04 sec)
+
+TCL COMMANDS
+------------
+1.COMMIT: DIRECTLY SAVED IN THE DATABASE
+AFTER COMMIT ROLLBACK DOES NOT WORK
+
+2.ROLLBACK:IT WILL GO TO THE BEFORE TRANSACTION
+
+3.SAVEPOINT:
+SAVEPOINT is used to create a temporary point within a transaction, so that we can roll back the transaction
+to that point without rolling back the entire transaction.
+
+Transactions definition:
+------------------------
+The process of combining all related operations into a single unit and executing them according to the 
+rule "either all operations should succeed or none should succeed"is called transaction management.
+
+Ex:funds transfer
+consider a money transfer process between two accounts
+
+1.debit amount from the senders account
+2.credit amount into the receivers account
+
+There are two types of transactions such as
+1.Local Transactions
+--------------------
+in local transactions all operations of a transaction are executed on the same database
+ex: funds transfer from one account to another account where both accounts belong to the same bank
+2.Global transaction
+--------------------
+In global transactions,operations of a transaction are executed on different databases
+ex:
+Funds transfer from one account to another account where both accounts belong to differnt banks
+ 
+ACID Properties:
+---------------
+A-->Atomicity:all or none
+C-->consistency:The database remains in a valid state
+I-->Isolation:Transactions do not interface with each other
+D-->Durability:committed changes are permanent
+
+
+

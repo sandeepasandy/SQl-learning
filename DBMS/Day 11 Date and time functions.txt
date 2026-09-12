@@ -1,0 +1,360 @@
+SQL Date and Time Functions
+curdate()-->It returns the current date
+curtime()-->It returns the current time
+now()-->returns the current date and time
+time()--> extract time part
+date() -->extract date part
+year() -->extract year
+month() -->extract month
+day() -->extract day of month
+week() -->extract week number
+dayofweek() -->day of the week
+date_add -->add time to date
+date_sub
+datediff
+
+mysql> SELECT CURDATE() AS CURRENT__DATE;
++---------------+
+| CURRENT__DATE |
++---------------+
+| 2026-09-07    |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT CURTIME() AS CURRENT__TIME;
++---------------+
+| CURRENT__TIME |
++---------------+
+| 14:10:55      |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT NOW() AS CURRENT_DATE_TIME;
++---------------------+
+| CURRENT_DATE_TIME   |
++---------------------+
+| 2026-09-07 14:11:19 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DATE(NOW()) AS EXTRACTED_DATE;
++----------------+
+| EXTRACTED_DATE |
++----------------+
+| 2026-09-07     |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT TIME('2025-03-11 02:32:15') AS EXTRACTED_TIME;
++----------------+
+| EXTRACTED_TIME |
++----------------+
+| 02:32:15       |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT YEAR(NOW())AS EXTRACTED_YEAR;
++----------------+
+| EXTRACTED_YEAR |
++----------------+
+|           2026 |
++----------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT MONTH(NOW())AS EXTRACTED_MONTH;
++-----------------+
+| EXTRACTED_MONTH |
++-----------------+
+|               9 |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DAY(NOW())AS EXTRACTED_DAY;
++---------------+
+| EXTRACTED_DAY |
++---------------+
+|             7 |
++---------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT DAYOFMONTH(NOW())AS EXTRACTED_DAY;
++---------------+
+| EXTRACTED_DAY |
++---------------+
+|             7 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT WEEK(NOW())AS WEEK_NUMBER;
++-------------+
+| WEEK_NUMBER |
++-------------+
+|          36 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DAYOFWEEK(NOW())AS DAY_OF_WEEK;
++-------------+
+| DAY_OF_WEEK |
++-------------+
+|           2 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT DATE_ADD(NOW(),INTERVAL 10 DAY)AS NEW_DATE;
++---------------------+
+| NEW_DATE            |
++---------------------+
+| 2026-09-17 14:17:04 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DATE_ADD(NOW(),INTERVAL 200 DAY)AS NEW_DATE;
++---------------------+
+| NEW_DATE            |
++---------------------+
+| 2027-03-26 14:17:32 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DATE_SUB(NOW(),INTERVAL 10 DAY)AS NEW_DATE;
++---------------------+
+| NEW_DATE            |
++---------------------+
+| 2026-08-28 14:18:06 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DATEDIFF(NOW(),'2005-03-11')AS DAYS_DIFF;
++-----------+
+| DAYS_DIFF |
++-----------+
+|      7850 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT STR_TO_DATE('2025-03-11', '%Y-%M-%D')AS FORMATTED_DATE;
++----------------+
+| FORMATTED_DATE |
++----------------+
+| NULL           |
++----------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> SELECT STR_TO_DATE('2025-03-11', '%Y-%m-%d')AS FORMATTED_DATE;
++----------------+
+| FORMATTED_DATE |
++----------------+
+| 2025-03-11     |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DATE_FORMAT('2024-03-20','%W,%M,%d,%Y')AS FORMATTED_DATE;
++-------------------------+
+| FORMATTED_DATE          |
++-------------------------+
+| Wednesday,March,20,2024 |
++-------------------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT LAST_DAY(NOW())AS LAST_DAY_OF_MONTH;
++-------------------+
+| LAST_DAY_OF_MONTH |
++-------------------+
+| 2026-09-30        |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT MAKEDATE(2024,60)AS RESULT_DATE;
++-------------+
+| RESULT_DATE |
++-------------+
+| 2024-02-29  |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT MAKETIME(14,30,15)AS RESULT_TIME;
++-------------+
+| RESULT_TIME |
++-------------+
+| 14:30:15    |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT MONTHNAME(NOW())AS MONTH_NAME;
++------------+
+| MONTH_NAME |
++------------+
+| September  |
++------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DAYNAME(NOW())AS DAY_NAME;
++----------+
+| DAY_NAME |
++----------+
+| Monday   |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT QUARTER(NOW())AS QUARTER_VALUE;
++---------------+
+| QUARTER_VALUE |
++---------------+
+|             3 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT SEC_TO_TIME(3661)AS TIME_VALUE;
++------------+
+| TIME_VALUE |
++------------+
+| 01:01:01   |
++------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT TIME_TO_SEC('01:01:01')AS TOTAL_SECONDS;
++---------------+
+| TOTAL_SECONDS |
++---------------+
+|          3661 |
++---------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT SYSDATE()AS SYSTEM_DATE;
++---------------------+
+| SYSTEM_DATE         |
++---------------------+
+| 2026-09-07 14:32:18 |
++---------------------+
+1 row in set (0.01 sec)
+
+SET Operators:
+Union(): Combines results from two queries and removes duplicate rows, Columns must have the same 
+number and type
+
+UNION ALL: Combines results from two queries and includes all rows, including duplicates.
+columns must have the same number and type
+
+INTERSECT: returns rows that are common to both queries. columns must have the same number and type.
+Note:MySQL doesn't support intersect directly
+
+MINUS:Returns rows from the first query that are not present in the second query. columns must have the same
+number and type.Note: MySQL doesn't support minus directly
+
+mysql> SELECT*FROM STUDENTS;
++------------+--------------+-------------------+
+| student_id | student_name | course            |
++------------+--------------+-------------------+
+|        101 | Rahul        | Java Full Stack   |
+|        102 | Priya        | Python Full Stack |
+|        103 | Kiran        | Data Science      |
+|        104 | Sneha        | Java Full Stack   |
+|        105 | Ajay         | Testing           |
++------------+--------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT*FROM PLACED_STUDENTS;
++------------+--------------+--------------+
+| student_id | student_name | company_name |
++------------+--------------+--------------+
+|        103 | Kiran        | TCS          |
+|        104 | Sneha        | Infosys      |
+|        105 | Ajay         | Wipro        |
+|        106 | Pooja        | Accenture    |
+|        107 | Ramesh       | Capgemini    |
++------------+--------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT STUDENT_NAME FROM STUDENTS
+    -> UNION
+    -> SELECT STUDENT_NAME FROM PLACED_STUDENTS;
++--------------+
+| STUDENT_NAME |
++--------------+
+| Rahul        |
+| Priya        |
+| Kiran        |
+| Sneha        |
+| Ajay         |
+| Pooja        |
+| Ramesh       |
++--------------+
+7 rows in set (0.01 sec)
+
+mysql> SELECT STUDENT_ID FROM STUDENTS
+    -> UNION
+    -> SELECT STUDENT_ID FROM PLACED_STUDENTS;
++------------+
+| STUDENT_ID |
++------------+
+|        101 |
+|        102 |
+|        103 |
+|        104 |
+|        105 |
+|        106 |
+|        107 |
++------------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT STUDENT_NAME FROM STUDENTS
+    -> WHERE STUDENT_NAME NOT IN(SELECT STUDENT_NAME FROM PLACED_STUDENTS);
++--------------+
+| STUDENT_NAME |
++--------------+
+| Rahul        |
+| Priya        |
++--------------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT STUDENT_NAME FROM STUDENTS
+    ->  EXCEPT
+    ->  SELECT STUDENT_NAME FROM PLACED_STUDENTS;
++--------------+
+| STUDENT_NAME |
++--------------+
+| Rahul        |
+| Priya        |
++--------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT STUDENT_NAME FROM STUDENTS
+    -> UNION ALL
+    -> SELECT STUDENT_NAME FROM PLACED_STUDENTS;
++--------------+
+| STUDENT_NAME |
++--------------+
+| Rahul        |
+| Priya        |
+| Kiran        |
+| Sneha        |
+| Ajay         |
+| Kiran        |
+| Sneha        |
+| Ajay         |
+| Pooja        |
+| Ramesh       |
++--------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT STUDENT_NAME FROM STUDENTS
+    -> INTERSECT
+    -> SELECT STUDENT_NAME FROM PLACED_STUDENTS;
++--------------+
+| STUDENT_NAME |
++--------------+
+| Kiran        |
+| Sneha        |
+| Ajay         |
++--------------+
+3 rows in set (0.00 sec)
+
+
+JOINS intro:
+INNER JOIN: Matched records from both tables
+LEFT JOIN: Matched records + left table records
+RIGHT JOIN: Matched records + right table records
+FULL JOIN: Inner join +right join + left join
+CROSS JOIN: It performs cartesian product
+

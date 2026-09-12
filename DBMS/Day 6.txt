@@ -1,0 +1,112 @@
+Operators
+
+what is an operator?
+operator is a symbol it performs specific task
+syntax:
+operand operator operand
+1)arithmetic operator
+2)relational operator
+3)logical operator
+4)bitwise operator
+CREATE TABLE Product (
+ id INT,
+ name VARCHAR(100),
+ price DECIMAL(10,2),
+ qty INT
+ );
+INSERT INTO Product VALUES
+ (1, 'Pen', 10.00, 100),
+ (2, 'Notebook', 25.00, 50),
+ (3, 'Pencil', 5.00, 200),
+ (4, 'Eraser', 3.00, 300),
+ (5, 'Marker', 15.00, 80),
+ (6, 'Scale', 20.00, 150),
+ (7, 'Sharpener', 8.00, 120),
+ (8, 'Geometry Box', 120.00, 40),
+ (9, 'Sketch Pen', 60.00, 75),
+ (10, 'Crayons', 90.00, 55);
+
+
+TOTAL INVENTORY VALUE FOR EACH PRODUCT
+CALCULATE THE SUM BY 10
+
+mysql> use pfs5;
+Database changed
+mysql> CREATE TABLE Product (
+    ->  id INT,
+    ->  name VARCHAR(100),
+    ->  price DECIMAL(10,2),
+    ->  qty INT
+    ->  );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO Product VALUES
+    ->  (1, 'Pen', 10.00, 100),
+    ->  (2, 'Notebook', 25.00, 50),
+    ->  (3, 'Pencil', 5.00, 200),
+    ->  (4, 'Eraser', 3.00, 300),
+    ->  (5, 'Marker', 15.00, 80),
+    ->  (6, 'Scale', 20.00, 150),
+    ->  (7, 'Sharpener', 8.00, 120),
+    ->  (8, 'Geometry Box', 120.00, 40),
+    ->  (9, 'Sketch Pen', 60.00, 75),
+    ->  (10, 'Crayons', 90.00, 55);
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> SELECT*FROM PRODUCT;
++------+--------------+--------+------+
+| id   | name         | price  | qty  |
++------+--------------+--------+------+
+|    1 | Pen          |  10.00 |  100 |
+|    2 | Notebook     |  25.00 |   50 |
+|    3 | Pencil       |   5.00 |  200 |
+|    4 | Eraser       |   3.00 |  300 |
+|    5 | Marker       |  15.00 |   80 |
+|    6 | Scale        |  20.00 |  150 |
+|    7 | Sharpener    |   8.00 |  120 |
+|    8 | Geometry Box | 120.00 |   40 |
+|    9 | Sketch Pen   |  60.00 |   75 |
+|   10 | Crayons      |  90.00 |   55 |
++------+--------------+--------+------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT NAME,PRICE,PRICE+(PRICE*0.12)AS PRICE_WITH_TAX FROM PRODUCT;
++--------------+--------+----------------+
+| NAME         | PRICE  | PRICE_WITH_TAX |
++--------------+--------+----------------+
+| Pen          |  10.00 |        11.2000 |
+| Notebook     |  25.00 |        28.0000 |
+| Pencil       |   5.00 |         5.6000 |
+| Eraser       |   3.00 |         3.3600 |
+| Marker       |  15.00 |        16.8000 |
+| Scale        |  20.00 |        22.4000 |
+| Sharpener    |   8.00 |         8.9600 |
+| Geometry Box | 120.00 |       134.4000 |
+| Sketch Pen   |  60.00 |        67.2000 |
+| Crayons      |  90.00 |       100.8000 |
++--------------+--------+----------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT NAME,PRICE,(PRICE-5) AS PRICE_WITH_DISCOUNT FROM PRODUCT;
++--------------+--------+---------------------+
+| NAME         | PRICE  | PRICE_WITH_DISCOUNT |
++--------------+--------+---------------------+
+| Pen          |  10.00 |                5.00 |
+| Notebook     |  25.00 |               20.00 |
+| Pencil       |   5.00 |                0.00 |
+| Eraser       |   3.00 |               -2.00 |
+| Marker       |  15.00 |               10.00 |
+| Scale        |  20.00 |               15.00 |
+| Sharpener    |   8.00 |                3.00 |
+| Geometry Box | 120.00 |              115.00 |
+| Sketch Pen   |  60.00 |               55.00 |
+| Crayons      |  90.00 |               85.00 |
++--------------+--------+---------------------+
+10 rows in set (0.00 sec)
+
+mysql>
+
+
+
+SELECT SUM(PRICE * QUANTITY) AS INVENTORY_VALUE FROM PRODUCT;

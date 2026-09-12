@@ -1,0 +1,255 @@
+Today's discussion is about TCL and DCL
+TCL:
+COMMIT 
+ROLLBACK
+DCL:
+GRANT 
+REVOKE
+
+Microsoft Windows [Version 10.0.26200.9168]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u SUNNY -p
+Enter password: ********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 15
+Server version: 8.0.46 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> -- select,delete,update
+mysql> USE PFS5;
+Database changed
+mysql> SHOW TABLES;
++----------------+
+| Tables_in_pfs5 |
++----------------+
+| students       |
++----------------+
+1 row in set (0.05 sec)
+
+mysql> SELECT*FROM STUDENTS;
+Empty set (0.02 sec)
+
+mysql> DESC STUDENTS;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| SID     | int         | YES  |     | NULL    |       |
+| SNAME   | varchar(20) | YES  |     | NULL    |       |
+| SMARKS  | int         | YES  |     | NULL    |       |
+| SBRANCH | varchar(30) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.02 sec)
+
+mysql> INSERT INTO STUDENTS VALUES(111,'SANDY',90,'CSE');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> DELETE FROM STUDENTS WHERE SID=111;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> UPDATE STUDENTS SET MARKS=100 WHERE SID=111;
+ERROR 1054 (42S22): Unknown column 'MARKS' in 'field list'
+mysql> SHOW GRANTS;
++--------------------------------------------------------------------------------+
+| Grants for SUNNY@%                                                             |
++--------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `SUNNY`@`%`                                              |
+| GRANT SELECT, INSERT, UPDATE, DELETE, DROP ON `pfs5`.`students` TO `SUNNY`@`%` |
++--------------------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 17
+Server version: 8.0.46 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use pfs5;
+Database changed
+mysql> CREATE USERNAME BUNNY IDENTIFIED BY 'BUNNY123';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'USERNAME BUNNY IDENTIFIED BY 'BUNNY123'' at line 1
+mysql> CREATE USER BUNNY IDENTIFIED BY 'BUNNY123';
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> REVOKE SELECT ON STUDENTS FROM SUNNY;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DESC STUDENTS;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| SID     | int         | YES  |     | NULL    |       |
+| SNAME   | varchar(20) | YES  |     | NULL    |       |
+| SMARKS  | int         | YES  |     | NULL    |       |
+| SBRANCH | varchar(30) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO STUDENTS(SID,SNAME,SMARKS,SBRANCH)
+    -> VALUES
+    -> (222,'SANDY',70,'CSE');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT*FROM STUDENTS;
++------+-------+--------+---------+
+| SID  | SNAME | SMARKS | SBRANCH |
++------+-------+--------+---------+
+|  222 | SANDY |     70 | CSE     |
++------+-------+--------+---------+
+1 row in set (0.00 sec)
+
+mysql> SHOW TABLES;
++----------------+
+| Tables_in_pfs5 |
++----------------+
+| employees      |
+| students       |
++----------------+
+2 rows in set (0.00 sec)
+
+mysql> DROP TABLE EMPLOYEES;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> CREATE TABLE EMPLOYEES(
+    -> EMPID INT AUTO_INCREMENT PRIMARY KEY,
+    -> NAME VARCHAR(30),
+    -> DEPARTMENT VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO EMPLOYEES(NAME,DEPARTMENT)VALUES('SUNNY','CSE');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO EMPLOYEES(NAME,DEPARTMENT)VALUES('BUNNY','ECE');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO EMPLOYEES(NAME,DEPARTMENT)VALUES('RAJ','EEE');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT*FROM EMPLOYEES;
++-------+-------+------------+
+| EMPID | NAME  | DEPARTMENT |
++-------+-------+------------+
+|     1 | SUNNY | CSE        |
+|     2 | BUNNY | ECE        |
+|     3 | RAJ   | EEE        |
++-------+-------+------------+
+3 rows in set (0.00 sec)
+
+mysql> SHOW TABLES;
++----------------+
+| Tables_in_pfs5 |
++----------------+
+| employees      |
+| students       |
++----------------+
+2 rows in set (0.00 sec)
+
+mysql> CREATE TABLE BACKUP_EMPLOYEES AS
+    -> SELECT*FROM EMPLOYEES;
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SHOW TABLES;
++------------------+
+| Tables_in_pfs5   |
++------------------+
+| backup_employees |
+| employees        |
+| students         |
++------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT*FROM BACK_UP EMPLOYEES;
+ERROR 1146 (42S02): Table 'pfs5.back_up' doesn't exist
+mysql> SELECT*FROM BACKUP_EMPLOYEES;
++-------+-------+------------+
+| EMPID | NAME  | DEPARTMENT |
++-------+-------+------------+
+|     1 | SUNNY | CSE        |
+|     2 | BUNNY | ECE        |
+|     3 | RAJ   | EEE        |
++-------+-------+------------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE STUDENTS_BACKUP AS
+    -> SELECT*FROM STUDENTS
+    -> WHERE 1=0;
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT*FROM STUDENTS;
++------+-------+--------+---------+
+| SID  | SNAME | SMARKS | SBRANCH |
++------+-------+--------+---------+
+|  222 | SANDY |     70 | CSE     |
++------+-------+--------+---------+
+1 row in set (0.00 sec)
+
+mysql> SELECT*FROM STUDENTS_BACKUP;
+Empty set (0.00 sec)
+
+mysql> SHOW TABLES;
++------------------+
+| Tables_in_pfs5   |
++------------------+
+| backup_employees |
+| employees        |
+| students         |
+| students_backup  |
++------------------+
+4 rows in set (0.00 sec)
+
+mysql> -- Computed columns
+mysql> CREATE TABLE PRODUCTS(
+    -> PRODUCTID INT AUTO_INCREMENT PRIMARY KEY,
+    -> PRODUCTNAME VARCHAR(50),
+    -> PRICE DECIMAL(10,2),
+    -> QUANTITY INT,
+    -> TOTALAMOUNT DECIMAL(10,2)GENERATED ALWAYS AS(PRICE*QUANTITY)STORED
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO PRODUCTS(PRODUCTNAME,PRICE,QUANTITY)
+    -> VALUES
+    -> ('EARPHONES',999.99,2),
+    -> ('MOBILE','19000.00,4),
+    '> ('TV',50000.25,3);
+    '> ;
+    '> );
+    '> KHHDFHJ
+    '> ^C
+mysql> INSERT INTO PRODUCTS(PRODUCTNAME,PRICE,QUANTITY)
+    -> VALUES
+    -> ('EARPHONES',999.99,2),
+    -> ('MOBILE',19000.00,4),
+    -> ('TV',50000.24,5);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT*FROM PRODUCTS;
++-----------+-------------+----------+----------+-------------+
+| PRODUCTID | PRODUCTNAME | PRICE    | QUANTITY | TOTALAMOUNT |
++-----------+-------------+----------+----------+-------------+
+|         1 | EARPHONES   |   999.99 |        2 |     1999.98 |
+|         2 | MOBILE      | 19000.00 |        4 |    76000.00 |
+|         3 | TV          | 50000.24 |        5 |   250001.20 |
++-----------+-------------+----------+----------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> DROP TABLE EMPLOYEES;
+Query OK, 0 rows affected (0.01 sec)

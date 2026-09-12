@@ -1,0 +1,207 @@
+Why do we need joins?
+To fetch data from multiple tables in a single query
+To reduce data duplication(instead of keeping everything in one table).
+To implement relationships(one-to-one, one-to-many, many-to-one, many-to-many)
+To generate report and analytics combining different datasets.
+
+Types of joins
+1. inner join
+2. left join
+3. right join
+4. full join
+5. cross join.
+
+1. inner join:
+Returns only rows that have matching values in both Values.
+
+Syntax:
+select columns
+from table1
+inner join table2
+on table1.common-column=table2.common-column;
+
+2.Left join:
+returns all rows from the left table and the matched rows from the right table.
+if no match, null values appear for the right table columns.
+
+Syntax:
+select columns
+from table1
+left join table2
+on table1.common-column=table2.common-column;
+
+3. Right join:
+returns all rows from the right table and the matched rows from the left table.
+If no match, NULL values appear for the left table columns.
+
+Syntax:
+select columns
+from table1
+right join table2
+on table1.common-column=table2.common-column;
+
+4. Full join:
+To simulate, use the union of left join and right join.
+
+Syntax:
+select columns
+from table1
+left join table2
+on table1.common-column=table2.common-column;
+union
+select columns
+from table1
+right join table2
+on table1.common-column=table2.common-column;
+
+5. Cross join:
+returns a Cartesian product -- every row from the first table with every row 
+from the second table.
+Syntax:
+select columns
+from table1
+cross join table2;
+
+mysql> CREATE TABLE TAB1(NUMID INT);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> CREATE TABLE TAB2(NUMID INT);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO TAB1 VALUES(10),(11),(12),(14);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO TAB2 VALUES(11),(12),(13),(15);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT*FROM TAB1;
++-------+
+| NUMID |
++-------+
+|    10 |
+|    11 |
+|    12 |
+|    14 |
++-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT*FROM TAB2;
++-------+
+| NUMID |
++-------+
+|    11 |
+|    12 |
+|    13 |
+|    15 |
++-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT*FROM TAB1
+    -> INNER JOIN TAB2
+    -> ON TAB1.NUMID=TAB2.NUMID;
++-------+-------+
+| NUMID | NUMID |
++-------+-------+
+|    11 |    11 |
+|    12 |    12 |
++-------+-------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT*FROM TAB1
+    -> LEFT JOIN TAB2
+    -> ON TAB1.NUMID=TAB2.NUMID;
++-------+-------+
+| NUMID | NUMID |
++-------+-------+
+|    10 |  NULL |
+|    11 |    11 |
+|    12 |    12 |
+|    14 |  NULL |
++-------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT*FROM TAB1
+    -> RIGHT JOIN TAB21
+    -> ^C
+mysql> SELECT*FROM TAB1
+    -> RIGHT JOIN TAB2
+    -> ON TAB1.NUMID=TAB2.NUMID;
++-------+-------+
+| NUMID | NUMID |
++-------+-------+
+|    11 |    11 |
+|    12 |    12 |
+|  NULL |    13 |
+|  NULL |    15 |
++-------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT*FROM TAB1
+    -> LEFT JOIN TAB2
+    -> ON TAB1.NUMID=TAB2.NUMID
+    -> UNION
+    -> SELECT*FROM TAB1
+    -> RIGHT JOIN TAB2
+    -> ON TAB1.NUMID=TAB2.NUMID;
++-------+-------+
+| NUMID | NUMID |
++-------+-------+
+|    10 |  NULL |
+|    11 |    11 |
+|    12 |    12 |
+|    14 |  NULL |
+|  NULL |    13 |
+|  NULL |    15 |
++-------+-------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT*FROM TAB1
+    -> CROSS JOIN TAB2;
++-------+-------+
+| NUMID | NUMID |
++-------+-------+
+|    14 |    11 |
+|    12 |    11 |
+|    11 |    11 |
+|    10 |    11 |
+|    14 |    12 |
+|    12 |    12 |
+|    11 |    12 |
+|    10 |    12 |
+|    14 |    13 |
+|    12 |    13 |
+|    11 |    13 |
+|    10 |    13 |
+|    14 |    15 |
+|    12 |    15 |
+|    11 |    15 |
+|    10 |    15 |
++-------+-------+
+16 rows in set (0.00 sec)
+
+SELECT D.DEPARTMENT_NAME,SUM(E.SALARY)AS TOTAL_SALARY
+FROM DEPARTMENTS D
+LEFT JOIN EMPLOYEES E
+ON D.DEPARTMENT_ID=E.DEPARTMENT_ID
+GROUP BY D.DEPARTMENT_NAME
+ORDER BY SALARY>50000;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

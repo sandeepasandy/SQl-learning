@@ -1,0 +1,341 @@
+What is a subquery?
+A subquery is a query inside another query 
+It is written inside parenthesis() and its result is used by the outer query
+
+It is also called as
+inner query
+nested query
+inner select
+
+General syntax:
+----------------
+select column-list
+from table 
+where column operator(select column from table where condition);
+
+Purpose of subquery
+-------------------
+To breakdown complex problems into smaller queries
+To use the result of one query as input to another
+To avoid multiple steps (write in a single query instead of temp tables).
+
+Types of subqueries:
+--------------------
+1.Single row sub query
+2.Multirow sub query
+3.nested subquery
+4.corelated subquery
+5.exists/not exists subquery.
+
+1.single row subquery:
+----------------------
+single row subqueries returns exactly one row and one column They use comparision operators like
+=,>,>=,<,<=,!=
+
+Characteristics
+---------------
+returns only one value
+can use single-value comparision operator
+if subquery returns no rows or multiple rows,it causes an error
+
+syntax
+------
+select columns
+from table
+where column Operator(select column from table where condition);
+
+2.Multi-row subquery:
+---------------------
+Multi-rows Subqueries(IN)
+A multi row subquery returns more than one row.Then in operator is used when you want to compare
+a value with multiple values returned by the subquery
+characterstics
+returns multiple rows
+uses the IN operator
+checks whether a value exists in list returned by the subquery
+equivalent to multiple or conditions
+most commonly used for matching values
+
+syntax:
+select columns from table
+where column IN(select column from table where condition);
+
+3.Multi row subqueries(ANY/SOME)
+Multi rows subqueries returns mutiple rows when using any or some,the condition is true if it matches
+at least one value returned by the subquery
+
+Characterstics
+returns multiple values
+ANY and SOME are interchangeable
+condition is true if any of the satisfy the condition
+often used with IN,>ANY,<ANY,=ANY..etc
+Syntax:
+select columns from table
+where column Operator ANY/SOME(select column from table where condition);
+
+4.Multi-row Subquery (ALL)
+The ALL operator means the condition must be true for all values return by the subquery
+
+Characteristicts
+Condition must be true for all values in the subquery result.
+often used with >ALL,<ALL,>=ALL,<=ALL
+>ALL means greater than the maximum values
+<ALL means less than the minimum values.
+
+SYntax:
+select columns from table
+where column operator ALL(select column from table where condition);
+
+5.Nested subquery:
+nested subqueries are subqueries with subqueries They can be multiple level deep and are executed 
+from the innermost to the outermost
+
+Charactersticts
+Multiple levels of nesting
+Inner queries execute first
+Can combine different types of subqueries
+Useful for complex conditions
+
+Syntax:
+SELECT column_list
+FROM table 
+WHERE column =(SELECT column
+               FROM table
+               WHERE column =(SELECT column
+                               FROM table
+                               WHERE condition));
+6.Corelated subquery
+Corelated subqueries are subqueries that reference column from the outer query.Unlike regular subqueries
+that execute once,corelated subqueries executes once for each row processed by the outer query
+
+Charactersticts
+references column from the outer query
+executes multiple times(once per outer row).
+Cannot be executed independently
+often used with EXISTS,NOT EXISTS
+Generally slower than non-corelated subqueries.
+
+Syntax:
+SELECT columns
+FROM table1 outer_alias
+WHERE condition(SELECT column
+               FROM table2 inner_alias
+               WHERE inner_alias.column=outer_alias.column);                                                              
+
+7.Exists/not exists subquery
+EXISTS is used to test whether a subquery returns any rows.It returns true if the
+subquery returns at least one row.False otherwise NOT EXISTS returns true if the subquery returns no rows.
+
+Charactersticts
+returns TRUE/FALSE(Boolean result)
+more efficient than in large datasets
+often used with co related subqueries
+stops execution as soon as first match is found.
+Select clause is exists doesnt matter (often use SELECT 1)
+
+SYNTAX
+------
+select columns
+from table1
+where exists(select 1 from table2 where condition);
+
+select columns
+from table1
+where NOT exists(select 1 from table2 where condition);
+
+1.FIND THE COUNTRY WITH LARGEST POPULATION
+
+mysql> SELECT NAME,POPULATION
+    -> FROM COUNTRY
+    -> WHERE POPULATION=(SELECT MAX(POPULATION)FROM COUNTRY);
++-------+------------+
+| NAME  | POPULATION |
++-------+------------+
+| India | 1428000000 |
++-------+------------+
+
+2.FIND COUNTRIES WITH POPULATION GREATER THAN CHINA'S POPULATION
+
+mysql> SELECT NAME,POPULATION FROM COUNTRY
+    -> WHERE POPULATION>(SELECT POPULATION FROM COUNTRY WHERE NAME ='CHINA');
++-------+------------+
+| NAME  | POPULATION |
++-------+------------+
+| India | 1428000000 |
++-------+------------+
+
+3.FIND THE CAPITAL CITY OF BRAZIL.
+
+mysql> SELECT C.NAME,C.POPULATION
+    -> FROM CITY C
+    -> WHERE C.ID=(SELECT CAPITAL FROM COUNTRY WHERE NAME='BRAZIL');
++----------+------------+
+| NAME     | POPULATION |
++----------+------------+
+| Brasilia |    3100000 |
++----------+------------+
+
+4.FIND COUNTRIES WITH POPULATION GREATER THAN ANY EUROPEAN COUNTRY
+
+mysql> SELECT NAME,POPULATION,CONTINENT
+    -> FROM COUNTRY
+    -> WHERE POPULATION>ANY(SELECT POPULATION FROM COUNTRY WHERE CONTINENT ='EUROPE')
+    -> AND CONTINENT!= 'EUROPE';
++---------------+------------+---------------+
+| NAME          | POPULATION | CONTINENT     |
++---------------+------------+---------------+
+| Argentina     |   45800000 | South America |
+| Australia     |   26600000 | Oceania       |
+| Bangladesh    |  172000000 | Asia          |
+| Brazil        |  216400000 | South America |
+| Canada        |   38900000 | North America |
+| Chile         |   19600000 | South America |
+| China         | 1412000000 | Asia          |
+| Colombia      |   52200000 | South America |
+| Algeria       |   45400000 | Africa        |
+| Egypt         |  112700000 | Africa        |
+| Ethiopia      |  126500000 | Africa        |
+| Ghana         |   33500000 | Africa        |
+| Indonesia     |  277500000 | Asia          |
+| India         | 1428000000 | Asia          |
+| Japan         |  123300000 | Asia          |
+| Kenya         |   55100000 | Africa        |
+| South Korea   |   51700000 | Asia          |
+| Morocco       |   37800000 | Africa        |
+| Mexico        |  128900000 | North America |
+| Nigeria       |  223800000 | Africa        |
+| New Zealand   |    5200000 | Oceania       |
+| Pakistan      |  240500000 | Asia          |
+| Peru          |   34400000 | South America |
+| Saudi Arabia  |   36900000 | Asia          |
+| Thailand      |   71800000 | Asia          |
+| United States |  339900000 | North America |
+| Venezuela     |   28300000 | South America |
+| Vietnam       |   98900000 | Asia          |
+| South Africa  |   60400000 | Africa        |
++---------------+------------+---------------+
+
+5.FIND CITIES WITH POPULATION GREATER THAN ANY NOT EQUAL TO USA
+
+mysql> SELECT NAME,POPULATION,COUNTRYCODE
+    -> FROM CITY
+    -> WHERE POPULATION>ANY(SELECT POPULATION FROM CITY WHERE COUNTRYCODE ='USA')
+    -> AND COUNTRYCODE != 'USA';
++------------------+------------+-------------+
+| NAME             | POPULATION | COUNTRYCODE |
++------------------+------------+-------------+
+| Berlin           |    3677000 | DEU         |
+| Hamburg          |    1900000 | DEU         |
+| Munich           |    1500000 | DEU         |
+| Paris            |    2140000 | FRA         |
+| Marseille        |     870000 | FRA         |
+| London           |    8980000 | GBR         |
+| Birmingham       |    1145000 | GBR         |
+| Rome             |    2870000 | ITA         |
+| Milan            |    1370000 | ITA         |
+| Naples           |     950000 | ITA         |
+| Madrid           |    3280000 | ESP         |
+| Barcelona        |    1620000 | ESP         |
+| Valencia         |     800000 | ESP         |
+| Warsaw           |    1860000 | POL         |
+| Krakow           |     780000 | POL         |
+| Amsterdam        |     905000 | NLD         |
+| Brussels         |    1220000 | BEL         |
+| Stockholm        |     980000 | SWE         |
+| Abuja            |    1780000 | NGA         |
+| Lagos            |   15400000 | NGA         |
+| Kano             |    4100000 | NGA         |
+| Cairo            |   10100000 | EGY         |
+| Alexandria       |    5280000 | EGY         |
+| Pretoria         |    2470000 | ZAF         |
+| Johannesburg     |    5780000 | ZAF         |
+| Cape Town        |    4710000 | ZAF         |
+| Nairobi          |    4400000 | KEN         |
+| Mombasa          |    1300000 | KEN         |
+| Addis Ababa      |    5230000 | ETH         |
+| Accra            |    2560000 | GHA         |
+| Kumasi           |    3350000 | GHA         |
+| Casablanca       |    3750000 | MAR         |
+| Algiers          |    2760000 | DZA         |
+| Oran             |     850000 | DZA         |
+| Beijing          |   21890000 | CHN         |
+| Shanghai         |   24870000 | CHN         |
+| Shenzhen         |   17560000 | CHN         |
+| New Delhi        |   34700000 | IND         |
+| Mumbai           |   21300000 | IND         |
+| Bengaluru        |   13600000 | IND         |
+| Tokyo            |   37400000 | JPN         |
+| Osaka            |   19100000 | JPN         |
+| Jakarta          |   10900000 | IDN         |
+| Surabaya         |    2870000 | IDN         |
+| Islamabad        |    1140000 | PAK         |
+| Karachi          |   16800000 | PAK         |
+| Lahore           |   13000000 | PAK         |
+| Dhaka            |   22400000 | BGD         |
+| Chittagong       |    5200000 | BGD         |
+| Hanoi            |    8400000 | VNM         |
+| Ho Chi Minh City |    9300000 | VNM         |
+| Bangkok          |   10700000 | THA         |
+| Chiang Mai       |    1200000 | THA         |
+| Seoul            |    9500000 | KOR         |
+| Busan            |    3400000 | KOR         |
+| Riyadh           |    7680000 | SAU         |
+| Jeddah           |    4780000 | SAU         |
+| Ottawa           |    1070000 | CAN         |
+| Toronto          |    2930000 | CAN         |
+| Mexico City      |    9200000 | MEX         |
+| Guadalajara      |    1500000 | MEX         |
+| Brasilia         |    3100000 | BRA         |
+| Sao Paulo        |   12300000 | BRA         |
+| Rio de Janeiro   |    6750000 | BRA         |
+| Buenos Aires     |    3080000 | ARG         |
+| Cordoba          |    1450000 | ARG         |
+| Bogota           |    7970000 | COL         |
+| Medellin         |    2530000 | COL         |
+| Lima             |    9700000 | PER         |
+| Arequipa         |    1080000 | PER         |
+| Santiago         |    6270000 | CHL         |
+| Caracas          |    2900000 | VEN         |
+| Maracaibo        |    1650000 | VEN         |
+| Sydney           |    5310000 | AUS         |
+| Melbourne        |    5150000 | AUS         |
+| Auckland         |    1700000 | NZL         |
++------------------+------------+-------------+
+
+6.
+mysql> SELECT NAME,POPULATION,CONTINENT
+    -> FROM COUNTRY
+    -> WHERE POPULATION>ALL(SELECT POPULATION FROM COUNTRY WHERE CONTINENT='EUROPE');
++---------------+------------+---------------+
+| NAME          | POPULATION | CONTINENT     |
++---------------+------------+---------------+
+| Bangladesh    |  172000000 | Asia          |
+| Brazil        |  216400000 | South America |
+| China         | 1412000000 | Asia          |
+| Egypt         |  112700000 | Africa        |
+| Ethiopia      |  126500000 | Africa        |
+| Indonesia     |  277500000 | Asia          |
+| India         | 1428000000 | Asia          |
+| Japan         |  123300000 | Asia          |
+| Mexico        |  128900000 | North America |
+| Nigeria       |  223800000 | Africa        |
+| Pakistan      |  240500000 | Asia          |
+| United States |  339900000 | North America |
+| Vietnam       |   98900000 | Asia          |
++---------------+------------+---------------+
+
+
+SELECT D.DEPT_ID,D.DEPT_NAME,MIN(E.SALARY) AS SECOND_MIN_SALARY
+FROM EMPLOYEE E
+JOIN DEPARTMENT D ON E.DEPT_ID = D.DEPT
+
+
+
+
+
+
+
+
+
+
+
